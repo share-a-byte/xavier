@@ -9,7 +9,7 @@ const MODEL = modelFrom(location.search) || '2K7G7cdukZV';
 const NAMES = { corridor: 'Corridor', doorway: 'Doorway', ramp: 'Ramp', elevator: 'Elevator',
   stairs: 'Stairs or step', blocked: 'No way through', unknown: 'Not checked' };
 const KEYS = { c: 'corridor', d: 'doorway', r: 'ramp', e: 'elevator', s: 'stairs', x: 'blocked', u: 'unknown' };
-const HINT = 'Choose From and To, then Plan route. A* finds a step-free path on the Matterport scan graph.';
+const HINT = '';
 const SPEED_MPS = 0.8, TURN_RADPS = 2.2, PIVOT_RAD = 0.35;
 // The wheelchair model is 0.746 m wide, faces +X, and its wheels touch y = 0.
 const CHAIR_SCALE = 0.70 / 0.746, CHAIR_CENTER_M = 0.0825 * CHAIR_SCALE;
@@ -321,12 +321,17 @@ async function rebuildLocalPreview() {
   }
   const epoch = state.epoch;
   const { waypoints, legs } = route;
-  const points = [{ x: waypoints[0].x, z: waypoints[0].z, y: waypoints[0].y }];
+  // One polyline per floor. Elevator legs are NOT drawn as a diagonal through the atrium/stairs.
+  const segments = [];
+  let cur = [{ x: waypoints[0].x, z: waypoints[0].z, y: waypoints[0].y }];
   let length = 0, grid = null;
+  const elevators = [];
   for (let i = 0; i < legs.length; i++) {
     const a = waypoints[i], b = waypoints[i + 1];
     if (legs[i].type === 'elevator') {
-      points.push({ x: b.x, z: b.z, y: b.y });
+      if (cur.length > 1) segments.push(cur);
+      elevators.push({ from: a, to: b });
+      cur = [{ x: b.x, z: b.z, y: b.y }];
       continue;
     }
     const local = await planLocal(a, b);
@@ -340,10 +345,17 @@ async function rebuildLocalPreview() {
       return;
     }
     length += local.lengthM || 0;
-    for (const p of local.points.slice(1)) points.push({ x: p.x, z: p.z, y: a.y });
+    for (const p of local.points.slice(1)) cur.push({ x: p.x, z: p.z, y: a.y });
   }
+  if (cur.length > 1) segments.push(cur);
   if (epoch !== state.epoch) return;
-  state.localPreview = { found: true, points, lengthM: Math.round(length * 100) / 100 };
+  state.localPreview = {
+    found: true,
+    segments,
+    points: segments.flat(),
+    elevators,
+    lengthM: Math.round(length * 100) / 100,
+  };
   state.localGrid = grid;
   schedule();
   paintTrip();
@@ -422,10 +434,10 @@ function paintTrip() {
     routeText(route.reason || 'No wheelchair route.', 'problem');
   } else {
     const elevators = route.usesElevator ? ' · uses elevator' : '';
-    let text = `Ours: ${chairWidthCm()} cm chair · ${route.lengthM} m · ${plural(route.legs.length, 'hop')}${elevators}.`;
+    let text = `${chairWidthCm()} cm · ${route.lengthM} m${elevators}`;
     if (compare && walking?.found) {
       const stairs = walking.legs.some(l => l.type === 'stairs');
-      text += ` Matterport/on-foot: ${walking.lengthM} m${stairs ? ' (uses stairs)' : ''}.`;
+      text += ` · on foot ${walking.lengthM} m${stairs ? ' (stairs)' : ''}`;
     }
     routeText(text);
   }
@@ -436,42 +448,15 @@ function paintTrip() {
   $('go-around').disabled = !sim.on || sim.held;
   $('block').disabled = !sim.on || sim.held;
   $('clear-obstacles').disabled = !state.obstacles.length;
-  if ($('sim-text')) {
-    const free = state.localGrid?.free?.length || 0;
-    const blocked = state.localGrid?.occupied?.length || 0;
-    if (free || blocked) {
-      $('sim-text').textContent = state.obstacles.length
-        ? `Local grid on map · ${free} free / ${blocked} blocked · ${state.obstacles.length} obstacle(s) · chair ${chairWidthCm()} cm`
-        : `Local grid on map · ${free} free cells (all clear) · place an obstacle to block cells · chair ${chairWidthCm()} cm`;
-    } else {
-      $('sim-text').textContent = 'Plan a route to show the local occupancy grid and drive path on the scan.';
-    }
+  const pose = state.chair;
+  const status = ({
+    planned: 'Ready', following: 'Driving', detour: 'Detouring', blocked: 'Blocked',
+    replanned: 'Replanned', arrived: 'Arrived', stopped: 'Stopped', 'no-route': 'No route',
+  }[trip.status] ?? trip.status);
+  if ($('st-chair')) $('st-chair').textContent = status;
+  if ($('log') && !$('log').hidden) {
+    $('log').innerHTML = [...trip.log].reverse().map(entry => `<li>${esc(entry.text)}</li>`).join('');
   }
-
-  const pose = state.chair, waypoints = route.waypoints || [];
-  const next = pose && Number.isInteger(pose.waypoint) ? waypoints[pose.waypoint] : null;
-  const simulated = pose?.source === 'simulator' ? ' (simulated)' : '';
-  $('st-chair').textContent = ({ planned: 'Ready at the start', following: 'Driving', detour: 'Going around an obstacle',
-    blocked: 'Stopped: the way ahead is blocked', replanned: 'Has a new route', arrived: 'Arrived', stopped: 'Stopped',
-    'no-route': 'Stopped: no wheelchair route' }[trip.status] ?? trip.status) + simulated;
-  $('st-next').textContent = next ? `${nodeName(next.id)} · ${Math.hypot(next.x - pose.x, next.z - pose.z).toFixed(1)} m away` : '–';
-  const preview = state.localPreview;
-  if (sim.on && sim.pathDrawn?.length) {
-    $('st-local').textContent = `Driving local A* · ${sim.path?.length ?? 0} pts left on this leg`;
-  } else if (preview?.found) {
-    const bent = state.obstacles.length ? ' · bent around obstacles' : ' · straight (no obstacles yet)';
-    $('st-local').textContent = `Local A* · ${preview.lengthM} m${bent}`;
-  } else if (preview && !preview.found) {
-    $('st-local').textContent = preview.reason || 'Local plan failed';
-  } else {
-    $('st-local').textContent = { planned: 'Plan a route to build the local path', following: 'Driving',
-      detour: 'Local detour', blocked: 'Found no way around', replanned: 'Taking the new route',
-      arrived: 'Done', stopped: 'Idle', 'no-route': 'Holding position' }[trip.status] ?? '–';
-  }
-  $('st-global').textContent = route.found
-    ? `Global A*: ${route.lengthM} m, ${plural(waypoints.length, 'waypoint')}${trip.blocked.length ? `, avoiding ${plural(trip.blocked.length, 'blocked hop')}` : ''}`
-    : route.reason;
-  $('log').innerHTML = [...trip.log].reverse().map(entry => `<li>${esc(entry.text)}</li>`).join('');
 }
 
 async function poll() {
@@ -662,7 +647,7 @@ async function goAround() {
     if (epoch !== state.epoch) return;
     if (!local.found) {
       $('st-local').textContent = local.reason || 'No local detour';
-      flash(local.reason || 'No local detour — try “hallway blocked” to replan globally.');
+      flash(local.reason || 'No detour — try Block hallway.');
       paintTrip();
       return;
     }
@@ -701,20 +686,11 @@ async function placeObstacleAhead() {
     sim.held = true;
     const ok = await armLeg();
     sim.held = false;
-    if (!ok) flash('Local planner cannot pass that obstacle — try hallway blocked for a global replan.');
-    else flash('Local path replanned around the obstacle.');
+    if (!ok) flash('No way around — try Block hallway.');
     paintTrip();
   } else {
-    const before = state.localPreview?.lengthM;
     await rebuildLocalPreview();
-    const after = state.localPreview?.lengthM;
-    if (state.localPreview?.found && after != null && before != null && after > before + 0.05) {
-      flash(`Local path bent around the obstacle (${before} m → ${after} m). Dashed = hops, blue = drive.`);
-    } else if (state.localPreview?.found) {
-      flash('Obstacle added — blue local path updated. Dashed grey is still the hop line.');
-    } else {
-      flash(state.localPreview?.reason || 'Local planner could not route around that obstacle.');
-    }
+    if (!state.localPreview?.found) flash(state.localPreview?.reason || 'No path around obstacle.');
   }
   paintTrip();
   schedule();
@@ -762,7 +738,7 @@ async function blockAhead() {
       clearInterval(sim.timer);
       Object.assign(sim, { held: false, path: null, pathDrawn: null });
       useTrip(trip);
-      routeText(trip.route.reason || 'No wheelchair way around. The chair stays stopped.', 'problem');
+      routeText(trip.route.reason || 'No route. Stopped.', 'problem');
     }
   } catch (error) {
     sim.held = false;
@@ -831,8 +807,9 @@ function draw() {
   for (const edge of graph.edges) {
     const a = nodes.get(edge.a), b = nodes.get(edge.b), chosen = picked?.edge === edge.id;
     if (tripActive && !inside && !chosen) {
-      // Keep only elevators / stairs / closed hops as landmarks; skip unknown corridors.
-      if (!['elevator', 'stairs', 'blocked'].includes(edge.type) && !trip.blocked.includes(edge.id)) continue;
+      // Don't draw stair edges during a trip — they make the elevator route look like stairs.
+      if (edge.type === 'stairs') continue;
+      if (!['elevator', 'blocked'].includes(edge.type) && !trip.blocked.includes(edge.id)) continue;
     }
     let points;
     if (inside) {
@@ -854,34 +831,58 @@ function draw() {
   }
 
   const floorY = chair?.y ?? [...nodes.values()].find(n => state.floor === null || n.floor === state.floor)?.y ?? 0;
-  // Occupancy grid: free cells only when debugging obstacles; always show blocked cells.
-  if (state.obstacles.length) {
-    for (const cell of state.localGrid?.free || []) {
-      const s = at({ x: cell.x, y: floorY, z: cell.z });
-      if (s) out.push(`<rect class="grid-free" x="${(s.x - 2.5).toFixed(1)}" y="${(s.y - 2.5).toFixed(1)}" width="5" height="5"/>`);
+
+  // Break polylines at elevator legs so we never draw a chord through the stair atrium.
+  const segmentsOf = route => {
+    if (!route?.found) return [];
+    const segs = [], wps = route.waypoints, legs = route.legs;
+    let cur = [wps[0]];
+    for (let i = 0; i < legs.length; i++) {
+      if (legs[i].type === 'elevator') {
+        if (cur.length > 1 && (shown(cur[0]) || shown(cur[cur.length - 1]))) segs.push(cur);
+        cur = [wps[i + 1]];
+      } else {
+        cur.push(wps[i + 1]);
+      }
+    }
+    if (cur.length > 1 && (shown(cur[0]) || shown(cur[cur.length - 1]))) segs.push(cur);
+    return segs;
+  };
+  const drawSegs = (segs, cls) => {
+    for (const seg of segs) {
+      const d = line(seg);
+      if (d) out.push(`<path class="${cls}" d="${d}"/>`);
+    }
+  };
+  if ($('compare')?.checked) drawSegs(segmentsOf(trip?.walking), 'route-walk');
+
+  if (sim.on && sim.pathDrawn?.length > 1) {
+    const pts = sim.pathDrawn.map(([x, z]) => ({ x, y: chair?.y ?? trip?.route.waypoints[0]?.y ?? 0, z }));
+    const d = line(pts);
+    if (d) out.push(`<path class="casing" d="${d}"/><path class="route-chair" d="${d}"/>`);
+  } else if (state.localPreview?.found && state.localPreview.segments?.length) {
+    for (const seg of state.localPreview.segments) {
+      const d = line(seg);
+      if (d) out.push(`<path class="casing" d="${d}"/><path class="route-chair" d="${d}"/>`);
+    }
+  } else {
+    for (const seg of segmentsOf(trip?.route)) {
+      const d = line(seg);
+      if (d) out.push(`<path class="casing" d="${d}"/><path class="route-chair" d="${d}"/>`);
     }
   }
-  for (const cell of state.localGrid?.occupied || []) {
-    const s = at({ x: cell.x, y: floorY, z: cell.z });
-    if (s) out.push(`<rect class="grid-cell" x="${(s.x - 3).toFixed(1)}" y="${(s.y - 3).toFixed(1)}" width="6" height="6"/>`);
+  // Elevator portals: label both landings instead of drawing through the stairs.
+  if (tripActive) {
+    for (const leg of trip.route.legs) {
+      if (leg.type !== 'elevator') continue;
+      for (const id of [leg.from, leg.to]) {
+        const n = nodes.get(id), s = n && at(n);
+        if (!s || !shown(n)) continue;
+        out.push(`<circle class="node elevator-stop" cx="${s.x.toFixed(1)}" cy="${s.y.toFixed(1)}" r="9"/>`);
+        out.push(`<text class="place" x="${s.x.toFixed(1)}" y="${(s.y - 16).toFixed(1)}">Elevator</text>`);
+      }
+    }
   }
-
-  const pathOf = route => route?.found
-    ? route.waypoints.slice(1).map((w, i) => [route.waypoints[i], w]).filter(([p, q]) => shown(p) || shown(q)).map(line).join('')
-    : '';
-  if ($('compare')?.checked) {
-    const walk = pathOf(trip?.walking);
-    if (walk) out.push(`<path class="route-walk" d="${walk}"/>`);
-  }
-  // One clear blue path (local when available). Skip the dashed global underlay — it reads as clutter.
-  const localPts = (sim.on && sim.pathDrawn?.length > 1)
-    ? sim.pathDrawn.map(([x, z]) => ({ x, y: chair?.y ?? trip?.route.waypoints[0]?.y ?? 0, z }))
-    : state.localPreview?.found
-      ? state.localPreview.points
-      : null;
-  const global = pathOf(trip?.route);
-  const drive = localPts?.length > 1 ? line(localPts) : global;
-  if (drive) out.push(`<path class="casing" d="${drive}"/><path class="route-chair" d="${drive}"/>`);
   if (chair?.detour?.length > 1 && shown(chair) && !(sim.on && sim.pathDrawn)) {
     out.push(`<path class="route-detour" d="${line(chair.detour.map(([x, z]) => ({ x, y: chair.y, z })))}"/>`);
   }
@@ -898,7 +899,6 @@ function draw() {
     if (!s) continue;
     const isEnd = tripActive && (n.id === trip.start || n.id === trip.goal);
     const onRoute = routeIds.has(n.id);
-    // Trip view: only start/goal are large labeled pins; intermediate hops are quiet dots.
     const r = isEnd ? 11 : tripActive ? 5 : 9;
     const classes = `node${picked?.node === n.id ? ' picked-node' : ''}${isEnd ? ' standing' : ''}${tripActive && onRoute && !isEnd ? ' via' : ''}`;
     out.push(`<circle class="${classes}" data-node="${esc(n.id)}" cx="${s.x.toFixed(1)}" cy="${s.y.toFixed(1)}" r="${r}"/>`);

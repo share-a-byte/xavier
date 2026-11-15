@@ -8,76 +8,67 @@
 <body>
 <header>
   <a class="brand" href="/nav.html">Xavier</a>
-  <h1>Wheelchair navigator</h1>
-  <span id="mode-badge" class="badge sim" title="This page is driving a simulated chair through the API the real chair will use">Simulated</span>
+  <span id="mode-badge" class="badge sim">Sim</span>
 </header>
 <main>
-  <section class="stage" aria-label="Building scan">
+  <section class="stage" aria-label="Scan">
     <div class="toolbar">
       <div class="seg" id="views" aria-label="View">
-        <button data-view="floorplan" aria-pressed="false">Floor plan</button>
-        <button data-view="inside" aria-pressed="false">Walk-through</button>
+        <button data-view="floorplan" aria-pressed="false">Plan</button>
+        <button data-view="inside" aria-pressed="false">Inside</button>
       </div>
       <div class="seg" id="floors" aria-label="Floor"></div>
       <span id="hint"></span>
     </div>
     <div class="viewer">
-      <iframe id="scan" title="Matterport scan of the building" allow="fullscreen; xr-spatial-tracking"></iframe>
+      <iframe id="scan" title="Building scan" allow="fullscreen; xr-spatial-tracking"></iframe>
       <svg id="overlay" aria-hidden="true"></svg>
-      <p id="boot" role="status">Loading the scan…</p>
+      <p id="boot" role="status">Loading…</p>
     </div>
     <ul class="legend" aria-label="Legend">
-      <li><i class="route-chair"></i>Wheelchair path</li>
-      <li id="legend-matterport" hidden><i class="route-walk"></i>Matterport / on-foot</li>
+      <li><i class="route-chair"></i>Path</li>
+      <li id="legend-matterport" hidden><i class="route-walk"></i>On foot</li>
       <li><i class="hop elevator"></i>Elevator</li>
-      <li><i class="hop stairs"></i>Stairs</li>
       <li><i class="obstacle"></i>Obstacle</li>
-      <li><i class="grid-cell"></i>Blocked cells</li>
-      <li><i class="route-detour"></i>Detour</li>
     </ul>
   </section>
 
   <aside>
     <section class="panel">
-      <h2>Trip</h2>
       <label for="from">From</label><select id="from"></select>
       <label for="to">To</label><select id="to"></select>
       <label for="chair-preset">Chair</label>
       <select id="chair-preset">
-        <option value="manual">Manual wheelchair (64 cm)</option>
-        <option value="power">Power wheelchair (70 cm)</option>
-        <option value="xavier" selected>Xavier (70 cm)</option>
+        <option value="manual">Manual · 64 cm</option>
+        <option value="power">Power · 70 cm</option>
+        <option value="xavier" selected>Xavier · 70 cm</option>
       </select>
-      <label class="check"><input id="compare" type="checkbox"> Compare with Matterport path</label>
+      <label class="check"><input id="compare" type="checkbox"> On-foot compare</label>
       <div class="buttons">
-        <button class="primary" id="plan" disabled>Plan route</button>
-        <button id="drive" disabled>Drive simulated chair</button>
+        <button class="primary" id="plan" disabled>Plan</button>
+        <button id="drive" disabled>Drive</button>
         <button id="stop" disabled>Stop</button>
       </div>
       <p id="route-text" role="status"></p>
     </section>
 
     <section class="panel">
-      <h2>Simulation</h2>
-      <p class="fine">After Plan, the scan shows the local occupancy grid (cyan = free) and blue drive path. Place an obstacle to block cells (orange) and bend the path. Detour = replan this leg; hallway blocked = global replan.</p>
       <div class="buttons" id="obstacles">
-        <button id="add-obstacle" disabled>Place obstacle on route</button>
-        <button id="go-around" disabled>Obstacle: try local detour</button>
-        <button id="block" disabled>Obstacle: hallway blocked</button>
-        <button id="clear-obstacles" disabled>Clear obstacles</button>
+        <button id="add-obstacle" disabled>Add obstacle</button>
+        <button id="go-around" disabled>Detour</button>
+        <button id="block" disabled>Block hallway</button>
+        <button id="clear-obstacles" disabled>Clear</button>
       </div>
-      <p id="sim-text" class="fine"></p>
-      <dl>
-        <dt>Mode</dt><dd id="st-mode">Simulated</dd>
-        <dt>Chair</dt><dd id="st-chair">No trip yet</dd>
-        <dt>Next waypoint</dt><dd id="st-next">–</dd>
-        <dt>Local planner</dt><dd id="st-local">–</dd>
-        <dt>Global planner</dt><dd id="st-global">–</dd>
-      </dl>
-      <ol id="log" aria-live="polite" aria-label="Navigation events"></ol>
+      <p id="sim-text" class="fine" hidden></p>
+      <p id="st-mode" hidden>Simulated</p>
+      <p id="st-chair" class="fine" role="status"></p>
+      <p id="st-next" hidden></p>
+      <p id="st-local" hidden></p>
+      <p id="st-global" hidden></p>
+      <ol id="log" hidden aria-hidden="true"></ol>
     </section>
   </aside>
 </main>
-<script type="module" src="nav.mjs?v=simple-path-1"></script>
+<script type="module" src="nav.mjs?v=minimal-1"></script>
 </body>
 </html>
