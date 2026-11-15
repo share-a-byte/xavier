@@ -1,0 +1,2 @@
+/*! For license information please see 8730.js.LICENSE.txt */
+"use strict";(self.webpackChunkmp_webgl=self.webpackChunkmp_webgl||[]).push([[8730],{78730:(e,s,a)=>{a.r(s),a.d(s,{messages:()=>o});const o=JSON.parse('{"O3ju2R":["Se considerar que se trata de um erro, consulte o nosso <0>guia de resolução de problemas</0> ou <1>contacte o suporte</1>."],"D9QYYD":["Reative a conta"],"Z5NYQv":["Esta organização já não está ativa."]}')}}]);

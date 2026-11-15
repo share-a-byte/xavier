@@ -1,0 +1,388 @@
+{
+ "version": 1,
+ "model": "2K7G7cdukZV",
+ "updatedAt": "2026-11-15T06:48:00+00:00",
+ "edges": [
+  {
+   "from": "g28dnxza8f193q5nzhdaxf2hd",
+   "to": "qf5w019hhy47ybsiu9fyu43kd",
+   "type": "corridor",
+   "wheelchairAccessible": true
+  },
+  {
+   "from": "qu4unpew77rnmdcas4c9npyzc",
+   "to": "g28dnxza8f193q5nzhdaxf2hd",
+   "type": "corridor",
+   "wheelchairAccessible": true
+  },
+  {
+   "from": "qf5w019hhy47ybsiu9fyu43kd",
+   "to": "a6ce5xzf6mf48hy21cmu3q3ma",
+   "type": "corridor",
+   "wheelchairAccessible": true
+  },
+  {
+   "from": "g28dnxza8f193q5nzhdaxf2hd",
+   "to": "y9da08g1g5b77bdscnw7n3fya",
+   "type": "corridor",
+   "wheelchairAccessible": true
+  },
+  {
+   "from": "qf5w019hhy47ybsiu9fyu43kd",
+   "to": "y9da08g1g5b77bdscnw7n3fya",
+   "type": "doorway",
+   "wheelchairAccessible": true,
+   "widthCm": 86.0
+  },
+  {
+   "from": "qu4unpew77rnmdcas4c9npyzc",
+   "to": "1k478kza39tbfu1uhbttg5ybb",
+   "type": "corridor",
+   "wheelchairAccessible": true
+  },
+  {
+   "from": "y9da08g1g5b77bdscnw7n3fya",
+   "to": "1k478kza39tbfu1uhbttg5ybb",
+   "type": "corridor",
+   "wheelchairAccessible": true
+  },
+  {
+   "from": "a6ce5xzf6mf48hy21cmu3q3ma",
+   "to": "8cnnit59dnzb02y2nekixp6hc",
+   "type": "elevator",
+   "wheelchairAccessible": true
+  }
+ ],
+ "destinations": [
+  {
+   "id": "west-gallery-mid",
+   "name": "West gallery mid",
+   "sweep": "0f2a2fyf5iibscursb5gkyu9a"
+  },
+  {
+   "id": "gallery-w-forum-l1",
+   "name": "Gallery W (Forum L1)",
+   "sweep": "n0ppizy9u8xcadypd2bawceyc"
+  },
+  {
+   "id": "west-gallery-north",
+   "name": "West gallery north",
+   "sweep": "pr6uqwurqfw4xg6ghnx2q1zmb"
+  },
+  {
+   "id": "west-gallery-far-north",
+   "name": "West gallery far north",
+   "sweep": "m50u46kpe0src2rqk6xmmri5d"
+  },
+  {
+   "id": "toward-rm-102-nw",
+   "name": "Toward Rm 102 (NW)",
+   "sweep": "5yqp8itw3r5s4iw3kuf4nqdsc"
+  },
+  {
+   "id": "sw-corner-gallery-l1",
+   "name": "SW corner gallery L1",
+   "sweep": "ufgr14zs7pbz0pig3kp07r7hd"
+  },
+  {
+   "id": "west-inner-mid",
+   "name": "West inner mid",
+   "sweep": "da9quipa0a6ny84ky8e6s3ptb"
+  },
+  {
+   "id": "south-gallery-west",
+   "name": "South gallery west",
+   "sweep": "yfn0c6232s1yxzgxqmqw7n6zb"
+  },
+  {
+   "id": "north-gallery-west",
+   "name": "North gallery west",
+   "sweep": "w5kacr4ci0d92c5wkzrfs4erd"
+  },
+  {
+   "id": "north-gallery-inner-west",
+   "name": "North gallery inner west",
+   "sweep": "r5cp1eut86x1rc9yepd4ysxwd"
+  },
+  {
+   "id": "north-gallery-toward-stairs",
+   "name": "North gallery toward stairs",
+   "sweep": "gprsw6xcqigh6reqseh3rmcrc"
+  },
+  {
+   "id": "forum-desks-sw",
+   "name": "Forum desks SW",
+   "sweep": "qu4unpew77rnmdcas4c9npyzc"
+  },
+  {
+   "id": "forum-desks-west-mid",
+   "name": "Forum desks west mid",
+   "sweep": "g28dnxza8f193q5nzhdaxf2hd"
+  },
+  {
+   "id": "forum-desks-nw",
+   "name": "Forum desks NW",
+   "sweep": "qf5w019hhy47ybsiu9fyu43kd"
+  },
+  {
+   "id": "elevator-forum-l1",
+   "name": "Elevator (Forum L1)",
+   "sweep": "a6ce5xzf6mf48hy21cmu3q3ma"
+  },
+  {
+   "id": "south-gallery-toward-desks",
+   "name": "South gallery toward desks",
+   "sweep": "ed5xxn70mz1xe5q15ts4fqcpa"
+  },
+  {
+   "id": "north-gallery-mid-west",
+   "name": "North gallery mid-west",
+   "sweep": "xq7dhrun14q0789iwk5epwtkb"
+  },
+  {
+   "id": "stairs-forum-l1",
+   "name": "Stairs (Forum L1)",
+   "sweep": "36aa2eubht8idy9kr2k8aubac"
+  },
+  {
+   "id": "forum-desks-center-west",
+   "name": "Forum desks center-west",
+   "sweep": "y9da08g1g5b77bdscnw7n3fya"
+  },
+  {
+   "id": "forum-desks-north-center",
+   "name": "Forum desks north-center",
+   "sweep": "duhb1en75fgewsniip8byupza"
+  },
+  {
+   "id": "forum-desks-w",
+   "name": "Forum desks (W)",
+   "sweep": "1k478kza39tbfu1uhbttg5ybb"
+  },
+  {
+   "id": "toward-rm-198-s-gallery",
+   "name": "Toward Rm 198 (S gallery)",
+   "sweep": "h13rg3tuxedbm5zzknqadu73b"
+  },
+  {
+   "id": "economics-forum-117",
+   "name": "Economics Forum 117",
+   "sweep": "az0h181td1h01x8x9gxhnp47a"
+  },
+  {
+   "id": "toward-rm-101-n-gallery",
+   "name": "Toward Rm 101 (N gallery)",
+   "sweep": "gaxq605gdd559tf073aubympc"
+  },
+  {
+   "id": "forum-desks-ne",
+   "name": "Forum desks NE",
+   "sweep": "e9e4rxumug0x0dz4xyhgenakd"
+  },
+  {
+   "id": "forum-desks-e",
+   "name": "Forum desks (E)",
+   "sweep": "28b2c48p1q2tgni83r5qkdc2b"
+  },
+  {
+   "id": "forum-desks-east-center",
+   "name": "Forum desks east-center",
+   "sweep": "1gmnh1czf97m0y4s6119pfs1d"
+  },
+  {
+   "id": "south-gallery-mid",
+   "name": "South gallery mid",
+   "sweep": "8h1u5sb6x8sabzcssd91exwna"
+  },
+  {
+   "id": "north-gallery-mid",
+   "name": "North gallery mid",
+   "sweep": "thaxyfyip9r71h69gkck885aa"
+  },
+  {
+   "id": "south-gallery-east",
+   "name": "South gallery east",
+   "sweep": "ht0bbyeyc69qwxm7did6ycbuc"
+  },
+  {
+   "id": "north-gallery-east",
+   "name": "North gallery east",
+   "sweep": "panr3bktyzufic6e6xb4mtuub"
+  },
+  {
+   "id": "east-gallery-north",
+   "name": "East gallery north",
+   "sweep": "684rbi72ft03adydwabgicmpb"
+  },
+  {
+   "id": "east-gallery-mid",
+   "name": "East gallery mid",
+   "sweep": "2yy18y2trz8tgisf5r9s1tfpc"
+  },
+  {
+   "id": "gallery-e-forum-l1",
+   "name": "Gallery E (Forum L1)",
+   "sweep": "umf4kucuf8hn4ipb9az044yxc"
+  },
+  {
+   "id": "se-corner-gallery-l1",
+   "name": "SE corner gallery L1",
+   "sweep": "81tg3n7bd96pyfp31pzd7mada"
+  },
+  {
+   "id": "ne-corner-gallery-l1",
+   "name": "NE corner gallery L1",
+   "sweep": "2qe44cteny5g297zquh4gpgcd"
+  },
+  {
+   "id": "gallery-w-floor-3",
+   "name": "Gallery W (Floor 3)",
+   "sweep": "akkrtige2btw2mmn2ghr2z9za"
+  },
+  {
+   "id": "nw-corner-gallery-l2",
+   "name": "NW corner gallery L2",
+   "sweep": "haipxtu4fuppeii5f8iik4btc"
+  },
+  {
+   "id": "sw-corner-gallery-l2",
+   "name": "SW corner gallery L2",
+   "sweep": "eqpgxz0sb38saf4rcuxng6uud"
+  },
+  {
+   "id": "west-gallery-mid-l2",
+   "name": "West gallery mid L2",
+   "sweep": "6hxpxut4nuzsug4625z1dk7bd"
+  },
+  {
+   "id": "west-gallery-south-l2",
+   "name": "West gallery south L2",
+   "sweep": "7dsusre8f794uicd3gsb1q5yd"
+  },
+  {
+   "id": "west-gallery-north-l2",
+   "name": "West gallery north L2",
+   "sweep": "3ny35zcnrdiw2ham0z1sptyqd"
+  },
+  {
+   "id": "west-gallery-far-north-l2",
+   "name": "West gallery far north L2",
+   "sweep": "9f45hxprghib9bgxnzkd87f6b"
+  },
+  {
+   "id": "south-gallery-west-l2",
+   "name": "South gallery west L2",
+   "sweep": "y8rya39xwbarmpmfakn2qaimc"
+  },
+  {
+   "id": "north-gallery-west-l2",
+   "name": "North gallery west L2",
+   "sweep": "rfuwtwdh07qm2ct0m04b3sb2a"
+  },
+  {
+   "id": "stairs-floor-3",
+   "name": "Stairs (Floor 3)",
+   "sweep": "b8ckm0ge7yzdxbq0f5tkeswyd"
+  },
+  {
+   "id": "gallery-n-floor-3",
+   "name": "Gallery N (Floor 3)",
+   "sweep": "b1q6mcf0edqwd7xwzk6497maa"
+  },
+  {
+   "id": "gallery-s-floor-3",
+   "name": "Gallery S (Floor 3)",
+   "sweep": "ih6tueuzaxnyw3f47m5ygeccd"
+  },
+  {
+   "id": "toward-rm-200-common-room",
+   "name": "Toward Rm 200 (common room)",
+   "sweep": "mk5198wdpzeqzp73ese8h4pbb"
+  },
+  {
+   "id": "classroom-floor-3",
+   "name": "Classroom (Floor 3)",
+   "sweep": "2eum01wmtxcin1q8grtnmc0ra"
+  },
+  {
+   "id": "toward-rm-217",
+   "name": "Toward Rm 217",
+   "sweep": "3xprhtpgyi8tqttrrqhmghw6b"
+  },
+  {
+   "id": "toward-rm-298",
+   "name": "Toward Rm 298",
+   "sweep": "p8q154uncpnbn9zz3pf0utc1d"
+  },
+  {
+   "id": "south-gallery-mid-l2",
+   "name": "South gallery mid L2",
+   "sweep": "f7ryu7kyugtp7bx4dm3qa1dec"
+  },
+  {
+   "id": "north-gallery-mid-l2",
+   "name": "North gallery mid L2",
+   "sweep": "t9wqkieqytkbx8egqum168w6b"
+  },
+  {
+   "id": "toward-rm-201",
+   "name": "Toward Rm 201",
+   "sweep": "bd3dzdmm4w3twrznh1ydgfq8b"
+  },
+  {
+   "id": "lab-floor-3",
+   "name": "Lab (Floor 3)",
+   "sweep": "wd46bmmxqkzpyw35raqsdx2db"
+  },
+  {
+   "id": "elevator-floor-3",
+   "name": "Elevator (Floor 3)",
+   "sweep": "8cnnit59dnzb02y2nekixp6hc"
+  },
+  {
+   "id": "elevator-lobby",
+   "name": "Elevator lobby",
+   "sweep": "85ekq5i5e02pxxe0se65sr5sc"
+  },
+  {
+   "id": "southeast-inner",
+   "name": "Southeast inner",
+   "sweep": "xdym22pw82n1ius7pazhttd1a"
+  },
+  {
+   "id": "south-gallery-east-l2",
+   "name": "South gallery east L2",
+   "sweep": "4z3dsh3hzihrqcr8fsxqdkf6c"
+  },
+  {
+   "id": "north-gallery-east-l2",
+   "name": "North gallery east L2",
+   "sweep": "9xmtamt4c9trdkf242ttr6dwb"
+  },
+  {
+   "id": "east-gallery-mid-l2",
+   "name": "East gallery mid L2",
+   "sweep": "8c32s7nkt2849ty7f2xzdunda"
+  },
+  {
+   "id": "gallery-e-floor-3",
+   "name": "Gallery E (Floor 3)",
+   "sweep": "0nunhdpcx0wq1xc8umazai0fd"
+  },
+  {
+   "id": "east-gallery-north-l2",
+   "name": "East gallery north L2",
+   "sweep": "ubrr49s35m2uxuy9y5rwh74sb"
+  },
+  {
+   "id": "ne-corner-gallery-l2",
+   "name": "NE corner gallery L2",
+   "sweep": "s959dys4uwha3mmrpkf6c5ddc"
+  },
+  {
+   "id": "se-corner-gallery-l2",
+   "name": "SE corner gallery L2",
+   "sweep": "c9t63yrk0m9rmufcmnebs24zb"
+  }
+ ]
+}

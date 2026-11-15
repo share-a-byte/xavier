@@ -1,0 +1,2 @@
+/*! For license information please see 2768.js.LICENSE.txt */
+"use strict";(self.webpackChunkmp_webgl=self.webpackChunkmp_webgl||[]).push([[2768],{62768:(e,s,p)=>{p.r(s),p.d(s,{messages:()=>u});const u=JSON.parse('{"O3ju2R":["若您認為這有誤，請參閱我們的<0>疑難排解指南</0>或<1>聯絡支援團隊</1>。"],"D9QYYD":["重新啟用帳戶"],"Z5NYQv":["此組織已不再活躍。"]}')}}]);
